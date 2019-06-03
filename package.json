@@ -1,0 +1,24 @@
+{
+  "name": "lobo-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src --out-dir dist",
+    "start": "nodemon --exec babel-node src/server.js"
+  },
+  "author": "diego-gonzaga@live.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "nodemon": "^1.19.1"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.17.1"
+  }
+}

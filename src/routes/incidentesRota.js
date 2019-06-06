@@ -12,4 +12,15 @@ export default function rotearIncidentesRota(router)
 
         })
     });
+
+    router.get('/incidenteById',checkToken,(req,res)=>
+    {
+        con.query('select * from incidentes where idIncidente=?',req,body.id,(err,result)=>
+        {
+            if(err)
+                res.send(err.message);
+            res.json(result);
+
+        })
+    });
 }

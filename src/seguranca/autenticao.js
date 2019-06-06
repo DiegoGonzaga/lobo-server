@@ -1,24 +1,38 @@
 import jwt from 'jsonwebtoken';
+import con from '../data/connection'
 const secret = 'arrozinho'; //palavra secreta utilizada pelo JWT
 export let autenticaToken = (req, res, next) => {
 
     next();
 }
 
-export let assinaToken = (req, res, callback) => {
+export let assinaToken = (req, res) => {
     const usuario = req.body.usuario;
     const senha = req.body.senha;
-    const user = '70';
-    const pass = '1234';
-    if (usuario && senha)
-        if (usuario == user && senha == pass) {
-            const token = jwt.assign({ usuario: usuario }, secret, { expiresIn: '24h' });
+    const campos = [usuario, senha];
+    let linha;
 
-            res.json({ token: token, auth: true });
+    con.query('select * from operadores where login=? and senha=?', campos, (err, result) => {
+        if (err)
+            return res.send(err.message);
+
+
+        if(result.length>0)
+            linha = result[0];
+        else
+            linha=false;
+
+        if (linha) 
+        {
+            const token = jwt.sign({ usuario: usuario }, secret, { expiresIn: '24h' });
+
+            res.json({ auth: true, token: token });
         }
-        else {
-            res.json({ auth: null, token: null });
+        else 
+        {
+            res.json({ auth: false, token: null, message: "Dados inválidos" });
         }
+    });
 }
 
 export let checkToken = (req, res, callback) => {

@@ -1,8 +1,15 @@
-import {autenticaToken} from '../seguranca/autentica';
+import {checkToken} from '../seguranca/autenticao';
+import con from '../data/connection';
 export default function rotearIncidentesRota(router)
 {
-    router.get('/incidentes',autenticaToken,(req,res)=>
+    router.get('/incidentes',checkToken,(req,res)=>
     {
-        res.send('teste');
+        con.query('select * from incidentes',(err,result)=>
+        {
+            if(err)
+                res.send(err.message);
+            res.json(result);
+
+        })
     });
 }

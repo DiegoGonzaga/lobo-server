@@ -1,6 +1,7 @@
 import con from '../data/connection';
-import {assinaToken} from '../seguranca/autenticao';
+import {assinaToken,checkToken} from '../seguranca/autenticao';
 export default function rotearAutenticacaoRota(router)
 {
     router.get('/gerarToken',assinaToken);
+    router.get('/verificarToken',checkToken,(req,res)=>{res.send({auth:true,message:"Token is valid."})});
 }

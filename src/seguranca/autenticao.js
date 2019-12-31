@@ -1,38 +1,38 @@
 import jwt from 'jsonwebtoken';
-import con from '../data/connection'
-const secret = 'arrozinho'; //palavra secreta utilizada pelo JWT
+import {Usuario} from '../models/usuario';
+
+const secret = process.env.SECRET; //palavra secreta utilizada pelo JWT
+
+
 export let autenticaToken = (req, res, next) => {
 
     next();
 }
 
 export let assinaToken = (req, res) => {
-    const usuario = req.body.usuario;
-    const senha = req.body.senha;
-    const campos = [usuario, senha];
-    let linha;
+    const {usuario,senha} = req.body;
 
-    con.query('select * from operadores where login=? and senha=?', campos, (err, result) => {
-        if (err)
-            return res.send(err.message);
+    if(!usuario || !senha){
+        let msg = { auth: false, token: null, message: "O(s) seguinte(s) campo(s) está(ão) vazio(s): " }
+        let campos = [];
+        if(!usuario)
+            campos.push('usuario');
+        if(!senha)
+            campos.push('senha');
+        msg.message+= `${campos}`
+        return res.status(400).json(msg);
+    }
+        
 
-
-        if(result.length>0)
-            linha = result[0];
-        else
-            linha=false;
-
-        if (linha) 
+    Usuario.findOne({where:{usuario,senha}})
+    .then( result =>
         {
-            const token = jwt.sign({ usuario: usuario }, secret, { expiresIn: '24h' });
-
-            res.json({ auth: true, token: token });
-        }
-        else 
-        {
-            res.json({ auth: false, token: null, message: "Dados inválidos" });
-        }
-    });
+            console.log(result)
+            if(!result)
+                res.json({ auth: false, token: null, message: "Dados inválidos" });
+            else
+                res.json(jwt.sign({ usuario: usuario }, secret, { expiresIn: '24h' }));
+        });
 }
 
 export let checkToken = (req, res, callback) => {

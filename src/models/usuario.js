@@ -5,9 +5,9 @@ const sequelize = new Sequelize(DB_SCHEMA, DB_USER, DB_PASSWORD, { dialect: 'mys
 export const Usuario = sequelize.define('usuario',
     {
         usuario: DataTypes.STRING,
-        senha: DataTypes.STRING
+        senha: DataTypes.STRING,
     });
-sequelize.sync()
+/*sequelize.sync()
     .then(() => {
         
         Usuario.create({

@@ -27,7 +27,6 @@ export let assinaToken = (req, res) => {
     Usuario.findOne({where:{usuario,senha}})
     .then( result =>
         {
-            console.log(result)
             if(!result)
                 res.json({ auth: false, token: null, message: "Dados inválidos" });
             else
